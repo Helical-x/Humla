@@ -91,11 +91,17 @@ android {
         if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows()) {
           ndkExe += '.cmd'
         }
-        commandLine ndkExe, '-C', file('src/main/jni/').absolutePath
+        commandLine ndkExe, '-C', file('src/main/jni/').absolutePath, 'LOCAL_LDFLAGS += "-Wl,-z,max-page-size=16384"'
     }
 
     tasks.withType(JavaCompile) {
         compileTask -> compileTask.dependsOn ndkBuild
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 
     lint {
